@@ -538,7 +538,8 @@ body {
   margin: 0 12px 1em;
 }
 .article-header {
-  padding: 20px 20px 0;
+  padding: 50px 20px;
+  text-align: center;
 }
 .article-title {
   text-decoration: none;
