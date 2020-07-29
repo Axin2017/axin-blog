@@ -1,3 +1,4 @@
+<%- partial('post/toc', {post: post}) %>
 <article id="<%= post.layout %>-<%= post.slug %>" class="article article-type-<%= post.layout %>" itemscope itemprop="blogPost">
   <div class="article-meta">
     <%- partial('post/date', {class_name: 'article-date', date_format: null}) %>
@@ -34,7 +35,6 @@
     <%- partial('post/nav') %>
   <% } %>
 </article>
-
 <% if (!index && post.comments && config.disqus_shortname){ %>
 <section id="comments">
   <div id="disqus_thread">
