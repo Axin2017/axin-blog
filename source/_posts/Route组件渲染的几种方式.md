@@ -122,7 +122,7 @@ ReactDOM.render(
 );
 ```
 
-<div class="danger-block">
+<div class="warn-block">
 
 `children` 属性的优先级要高于 `render` 和 `component` 。避免将多个属性同时使用在一个路由组件上。
 </div>
