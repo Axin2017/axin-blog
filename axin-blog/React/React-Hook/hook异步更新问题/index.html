@@ -16,21 +16,23 @@
   <meta http-equiv="window-target" content="_top" />
   
   
-  <title>Route组件渲染的几种方式 | Hexo</title>
-  <meta name="description" content="&lt;Route&gt; 组件是 React-Router 提供的用于当路由匹配上之后渲染用户组件的一个组件  渲染组件的方式component比较容易理解，直接传递一个组件。官网示例: 123456789101112131415import React from &quot;react&quot;;import ReactDOM from &quot;react-dom&quot;;import &amp;#123; BrowserRout">
+  <title>hook异步更新问题 | Hexo</title>
+  <meta name="description" content="在最近的工作中，初次尝试使用hook写一个完整的组件。果然第一次就遇到了问题。 需求这里我们先不要管代码写的逻辑问题。我们需要一个下拉组件，用户可以多选，可以清空。每次修改的时候都会去判断是否为空，如果为空的话给出警告（非常简单） 编码1234567891011121314151617181920212223242526272829303132333435363738394041424344454">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Route组件渲染的几种方式">
-<meta property="og:url" content="http://yoursite.com/React/React-Router/Route%E7%BB%84%E4%BB%B6%E6%B8%B2%E6%9F%93%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F/index.html">
+<meta property="og:title" content="hook异步更新问题">
+<meta property="og:url" content="http://yoursite.com/React/React-Hook/hook%E5%BC%82%E6%AD%A5%E6%9B%B4%E6%96%B0%E9%97%AE%E9%A2%98/index.html">
 <meta property="og:site_name" content="axin-blog">
-<meta property="og:description" content="&lt;Route&gt; 组件是 React-Router 提供的用于当路由匹配上之后渲染用户组件的一个组件  渲染组件的方式component比较容易理解，直接传递一个组件。官网示例: 123456789101112131415import React from &quot;react&quot;;import ReactDOM from &quot;react-dom&quot;;import &amp;#123; BrowserRout">
+<meta property="og:description" content="在最近的工作中，初次尝试使用hook写一个完整的组件。果然第一次就遇到了问题。 需求这里我们先不要管代码写的逻辑问题。我们需要一个下拉组件，用户可以多选，可以清空。每次修改的时候都会去判断是否为空，如果为空的话给出警告（非常简单） 编码1234567891011121314151617181920212223242526272829303132333435363738394041424344454">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-07-28T08:51:40.000Z">
-<meta property="article:modified_time" content="2020-08-04T13:20:56.889Z">
+<meta property="og:image" content="http://yoursite.com/assets/hook%E5%BC%82%E6%AD%A5%E6%9B%B4%E6%96%B0%E9%97%AE%E9%A2%98/foods.gif">
+<meta property="article:published_time" content="2020-08-03T11:27:50.000Z">
+<meta property="article:modified_time" content="2020-08-05T03:43:49.295Z">
 <meta property="article:author" content="Axin">
-<meta property="article:tag" content="Route-Render">
+<meta property="article:tag" content="Hook, async">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/assets/hook%E5%BC%82%E6%AD%A5%E6%9B%B4%E6%96%B0%E9%97%AE%E9%A2%98/foods.gif">
   <!-- Canonical links -->
-  <link rel="canonical" href="http://yoursite.com/React/React-Router/Route%E7%BB%84%E4%BB%B6%E6%B8%B2%E6%9F%93%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F/index.html">
+  <link rel="canonical" href="http://yoursite.com/React/React-Hook/hook%E5%BC%82%E6%AD%A5%E6%9B%B4%E6%96%B0%E9%97%AE%E9%A2%98/index.html">
   
     <link rel="alternate" href="/atom.xml" title="axin-blog" type="application/atom+xml">
   
@@ -274,14 +276,14 @@
   
 <main class="main" role="main">
   <div class="content">
-  <article id="post-Route组件渲染的几种方式" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+  <article id="post-hook异步更新问题" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
     
     <div class="article-header">
       
         
   
     <h1 class="article-title" itemprop="name">
-      Route组件渲染的几种方式
+      hook异步更新问题
     </h1>
   
 
@@ -289,20 +291,20 @@
       <div class="article-meta">
         <span class="article-date">
     <i class="icon icon-calendar-check"></i>
-	<a href="/React/React-Router/Route%E7%BB%84%E4%BB%B6%E6%B8%B2%E6%9F%93%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F/" class="article-date">
-	  <time datetime="2020-07-28T08:51:40.000Z" itemprop="datePublished">2020-07-28</time>
+	<a href="/React/React-Hook/hook%E5%BC%82%E6%AD%A5%E6%9B%B4%E6%96%B0%E9%97%AE%E9%A2%98/" class="article-date">
+	  <time datetime="2020-08-03T11:27:50.000Z" itemprop="datePublished">2020-08-03</time>
 	</a>
 </span>
         
   <span class="article-category">
     <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/categories/React/">React</a>►<a class="article-category-link" href="/categories/React/React-Router/">React-Router</a>
+    <a class="article-category-link" href="/categories/React/">React</a>►<a class="article-category-link" href="/categories/React/React-Hook/">React-Hook</a>
   </span>
 
         
   <span class="article-tag">
     <i class="icon icon-tags"></i>
-	<a class="article-tag-link" href="/tags/Route-Render/" rel="tag">Route-Render</a>
+	<a class="article-tag-link" href="/tags/Hook-async/" rel="tag">Hook, async</a>
   </span>
 
 
@@ -315,10 +317,10 @@
 	</span>
 
 
-        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/React/React-Router/Route%E7%BB%84%E4%BB%B6%E6%B8%B2%E6%9F%93%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F/#comments" class="article-comment-link">评论</a></span>
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/React/React-Hook/hook%E5%BC%82%E6%AD%A5%E6%9B%B4%E6%96%B0%E9%97%AE%E9%A2%98/#comments" class="article-comment-link">评论</a></span>
         
 	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 550(字)</span>
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 630(字)</span>
 	
 	
 		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 2(分)</span>
@@ -328,43 +330,27 @@
     </div>
     <div class="article-entry marked-body" itemprop="articleBody">
       
-        <p><code>&lt;Route&gt;</code> 组件是 <code>React-Router</code> 提供的用于当路由匹配上之后渲染用户组件的一个组件</p>
-<h1 id="渲染组件的方式"><a href="#渲染组件的方式" class="headerlink" title=" 渲染组件的方式"></a><Route> 渲染组件的方式</h1><h2 id="component"><a href="#component" class="headerlink" title="component"></a>component</h2><p>比较容易理解，直接传递一个组件。官网示例:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">"react"</span>;</span><br><span class="line"><span class="keyword">import</span> ReactDOM <span class="keyword">from</span> <span class="string">"react-dom"</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; BrowserRouter <span class="keyword">as</span> Router, Route &#125; <span class="keyword">from</span> <span class="string">"react-router-dom"</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// All route props (match, location and history) are available to User</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">User</span>(<span class="params">props</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hello &#123;props.match.params.username&#125;!<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ReactDOM.render(</span><br><span class="line">  &lt;Router&gt;</span><br><span class="line">    &lt;Route path=<span class="string">"/user/:username"</span> component=&#123;User&#125; /&gt;</span><br><span class="line">  &lt;<span class="regexp">/Router&gt;,</span></span><br><span class="line"><span class="regexp">  node</span></span><br><span class="line"><span class="regexp">);</span></span><br></pre></td></tr></table></figure>
+        <p>在最近的工作中，初次尝试使用hook写一个完整的组件。果然第一次就遇到了问题。</p>
+<h1 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h1><p>这里我们先不要管代码写的逻辑问题。我们需要一个下拉组件，用户可以多选，可以清空。每次修改的时候都会去判断是否为空，如果为空的话给出警告（非常简单）</p>
+<h1 id="编码"><a href="#编码" class="headerlink" title="编码"></a>编码</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> React, &#123; useState &#125; <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; fromJS &#125; <span class="keyword">from</span> <span class="string">'immutable'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; Select &#125; <span class="keyword">from</span> <span class="string">'antd'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> &#123; Option &#125; = Select;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">HooksAsync</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> foodList = [<span class="string">'苹果'</span>, <span class="string">'梨'</span>, <span class="string">'米饭'</span>, <span class="string">'面条'</span>, <span class="string">'牛肉'</span>, <span class="string">'牛奶'</span>];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> initCheckedFoods = &#123;</span><br><span class="line">    count: <span class="number">0</span>,</span><br><span class="line">    value: [],</span><br><span class="line">    error: <span class="string">''</span></span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> [foods, setFoods] = useState(fromJS(initCheckedFoods));</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> handleChange = <span class="function">(<span class="params">value</span>) =&gt;</span> &#123;</span><br><span class="line">    setFoods(foods</span><br><span class="line">      .set(<span class="string">'value'</span>, fromJS(value))</span><br><span class="line">      .set(<span class="string">'count'</span>, value.length)</span><br><span class="line">    );</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (value.length === <span class="number">0</span>) &#123;</span><br><span class="line">      setFoods(foods.set(<span class="string">'error'</span>, <span class="string">'不能为空'</span>))</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;&gt;</span><br><span class="line">      &lt;div&gt;</span><br><span class="line">        异常：&#123;foods.error&#125;</span><br><span class="line">      &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">      &lt;Select</span></span><br><span class="line"><span class="regexp">        allowClear</span></span><br><span class="line"><span class="regexp">        mode="multiple"</span></span><br><span class="line"><span class="regexp">        style=&#123;&#123;width: 500&#125;&#125;</span></span><br><span class="line"><span class="regexp">        placeholder="请选择食物"</span></span><br><span class="line"><span class="regexp">        value=&#123;foods.get('value').toJS()&#125;</span></span><br><span class="line"><span class="regexp">        onChange=&#123;handleChange&#125;</span></span><br><span class="line"><span class="regexp">      &gt;</span></span><br><span class="line"><span class="regexp">        &#123;</span></span><br><span class="line"><span class="regexp">          foodList.map((food) =&gt; (</span></span><br><span class="line"><span class="regexp">            &lt;Option</span></span><br><span class="line"><span class="regexp">              key=&#123;food&#125;</span></span><br><span class="line"><span class="regexp">              value=&#123;food&#125;</span></span><br><span class="line"><span class="regexp">            &gt;</span></span><br><span class="line"><span class="regexp">              &#123;food&#125;</span></span><br><span class="line"><span class="regexp">            &lt;/</span>Option&gt;</span><br><span class="line">          ))</span><br><span class="line">        &#125;</span><br><span class="line">      &lt;<span class="regexp">/Select&gt;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>&gt;</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> HooksAsync;</span><br></pre></td></tr></table></figure>
 
-<div class="block danger-block">
+<h1 id="bug出现"><a href="#bug出现" class="headerlink" title="bug出现"></a>bug出现</h1><p><img src="/assets/hook%E5%BC%82%E6%AD%A5%E6%9B%B4%E6%96%B0%E9%97%AE%E9%A2%98/foods.gif" alt="点击清空和删除至最后一个无效"><br>当我们点击清除按钮以及删除至最后一个触发错误提示逻辑的时候，并没有把选择项清除掉。也没有出来我们期望的错误提示。</p>
+<h1 id="bug定位"><a href="#bug定位" class="headerlink" title="bug定位"></a>bug定位</h1><p>经过摸爬滚打的排查。发现是因为hook和setState一样，更新操作是异步的。以上bug可以还原为这样子。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> handleChange = <span class="function">(<span class="params">value</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> currentFoods = foods;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 修改currentFoods的value和count属性，返回新值赋值给foods </span></span><br><span class="line">  setFoods(currentFoods</span><br><span class="line">    .set(<span class="string">'value'</span>, fromJS(value))</span><br><span class="line">    .set(<span class="string">'count'</span>, value.length)</span><br><span class="line">  );</span><br><span class="line">  <span class="comment">// 这里拿到的还是currentFoods，而不是新的foods。immutablejs修改之后，会返回新的对象，原来的还是原来的。</span></span><br><span class="line">  <span class="comment">// 所以这里的currentFoods并没有value和count的改变。</span></span><br><span class="line">  <span class="comment">// 修改currentFoods的error属性，返回新值赋值给foods </span></span><br><span class="line">  <span class="keyword">if</span> (value.length === <span class="number">0</span>) &#123;</span><br><span class="line">    setFoods(currentFoods.set(<span class="string">'error'</span>, <span class="string">'不能为空'</span>))</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
-<p>不要尝试用内联方法的方式赋值给 <code>component</code> 属性，如以下示例所示：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;Route path=<span class="string">"/user/:username"</span> component=&#123;() =&gt; <span class="xml"><span class="tag">&lt;<span class="name">User</span> /&gt;</span></span>)&#125; /&gt;</span><br></pre></td></tr></table></figure>
-
-<p>这样会导致每次重新渲染的时候都是一个新的 <code>User</code> 组件</p>
-</div>
-
-
-<h2 id="render-function"><a href="#render-function" class="headerlink" title="render function"></a>render function</h2><p>在某些情况下，我们可能希望能经过一些计算来在一个路由上显示不同的组件。如下所示：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">"react"</span>;</span><br><span class="line"><span class="keyword">import</span> ReactDOM <span class="keyword">from</span> <span class="string">"react-dom"</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; BrowserRouter <span class="keyword">as</span> Router, Route &#125; <span class="keyword">from</span> <span class="string">"react-router-dom"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> day = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// convenient inline rendering</span></span><br><span class="line">ReactDOM.render(</span><br><span class="line">  &lt;Router&gt;</span><br><span class="line">    &lt;Route path=<span class="string">"/home"</span> render=&#123;(props) =&gt; &#123;</span><br><span class="line">      <span class="keyword">if</span>(day === <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">Monday</span> /&gt;</span></span></span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">NotMonday</span> /&gt;</span></span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;&#125; /&gt;</span><br><span class="line">  &lt;<span class="regexp">/Router&gt;,</span></span><br><span class="line"><span class="regexp">  node</span></span><br><span class="line"><span class="regexp">);</span></span><br></pre></td></tr></table></figure>
-
-<div class="block tip-block">
+<p>可以看到，其实我们只是把修改了<code>error</code>的新值赋值给了<code>foods</code>而已。第一个<code>setFoods</code>完全被忽略了。</p>
+<h1 id="怎么解决"><a href="#怎么解决" class="headerlink" title="怎么解决"></a>怎么解决</h1><ul>
+<li>使用函数做参数，和setState一样</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (value.length === <span class="number">0</span>) &#123;</span><br><span class="line">  setFoods(<span class="function">(<span class="params">foods</span>) =&gt;</span> foods.set(<span class="string">'error'</span>, <span class="string">'不能为空'</span>))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <ul>
-<li>与将内联方法传递给 <code>component</code> 属性不同，使用此方式，不会造成组件的重复渲染</li>
-<li><code>props</code> 参数为 <code>{ match, location, history }</code></div>
-
-</li>
+<li>useRef</li>
 </ul>
-<div class="block warn-block">
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [foods, setFoods] = useState(fromJS(initCheckedFoods));</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> foodRef = useRef(foods);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> handleChange = <span class="function">(<span class="params">value</span>) =&gt;</span> &#123;</span><br><span class="line">  setFoods(foodRef.current</span><br><span class="line">    .set(<span class="string">'value'</span>, fromJS(value))</span><br><span class="line">    .set(<span class="string">'count'</span>, value.length)</span><br><span class="line">  );</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">if</span> (value.length === <span class="number">0</span>) &#123;</span><br><span class="line">    setFoods(foodRef.current.set(<span class="string">'error'</span>, <span class="string">'不能为空'</span>))</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
-<p><code>component</code> 属性的优先级要高于 <code>render</code> 。避免将两个属性同时使用在一个路由组件上。</p>
-</div>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>和 <code>setState</code> 一样，其实hook更新数据也是异步的。这个其实在react常用的人手上是不会出这个问题的。奈何我一个新手还是去淌了一遍。。</p>
 
-<h2 id="children-function"><a href="#children-function" class="headerlink" title="children function"></a>children function</h2><p><code>children function</code> 与 <code>render function</code> 的使用方式一样。不同的地方在于，当路由匹配失败后，<code>match</code> 参数会是 <code>null</code> 。<br>我们可以根据这个特性来做一些事情。</p>
-<p>官网代码示例，这里在匹配上的时候，增加了一个class：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">"react"</span>;</span><br><span class="line"><span class="keyword">import</span> ReactDOM <span class="keyword">from</span> <span class="string">"react-dom"</span>;</span><br><span class="line"><span class="keyword">import</span> &#123;</span><br><span class="line">  BrowserRouter <span class="keyword">as</span> Router,</span><br><span class="line">  Link,</span><br><span class="line">  Route</span><br><span class="line">&#125; <span class="keyword">from</span> <span class="string">"react-router-dom"</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">ListItemLink</span>(<span class="params">&#123; to, ...rest &#125;</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;Route</span><br><span class="line">      path=&#123;to&#125;</span><br><span class="line">      children=&#123;(&#123; match &#125;) =&gt; (</span><br><span class="line">        &lt;li className=&#123;match ? <span class="string">"active"</span> : <span class="string">""</span>&#125;&gt;</span><br><span class="line">          &lt;Link to=&#123;to&#125; &#123;...rest&#125; /&gt;</span><br><span class="line">        &lt;<span class="regexp">/li&gt;</span></span><br><span class="line"><span class="regexp">      )&#125;</span></span><br><span class="line"><span class="regexp">    /</span>&gt;</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ReactDOM.render(</span><br><span class="line">  &lt;Router&gt;</span><br><span class="line">    &lt;ul&gt;</span><br><span class="line">      &lt;ListItemLink to=<span class="string">"/somewhere"</span> /&gt;</span><br><span class="line">      &lt;ListItemLink to=<span class="string">"/somewhere-else"</span> /&gt;</span><br><span class="line">    &lt;<span class="regexp">/ul&gt;</span></span><br><span class="line"><span class="regexp">  &lt;/</span>Router&gt;,</span><br><span class="line">  node</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
-
-<div class="block warn-block">
-
-<p><code>children</code> 属性的优先级要高于 <code>render</code> 和 <code>component</code> 。避免将多个属性同时使用在一个路由组件上。</p>
-</div>
       
     </div>
     <div class="article-footer">
@@ -373,7 +359,7 @@
     
     <li class="post-copyright-link hidden-xs">
       <strong>本文链接：</strong>
-      <a href="http://yoursite.com/React/React-Router/Route%E7%BB%84%E4%BB%B6%E6%B8%B2%E6%9F%93%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F/" title="Route组件渲染的几种方式" target="_blank" rel="external">http://yoursite.com/React/React-Router/Route%E7%BB%84%E4%BB%B6%E6%B8%B2%E6%9F%93%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F/</a>
+      <a href="http://yoursite.com/React/React-Hook/hook%E5%BC%82%E6%AD%A5%E6%9B%B4%E6%96%B0%E9%97%AE%E9%A2%98/" title="hook异步更新问题" target="_blank" rel="external">http://yoursite.com/React/React-Hook/hook%E5%BC%82%E6%AD%A5%E6%9B%B4%E6%96%B0%E9%97%AE%E9%A2%98/</a>
     </li>
     
     <li class="post-copyright-license">
@@ -419,10 +405,10 @@
   
   <ul class="pager pull-left">
     
-    <li class="prev">
-      <a href="/React/React-Hook/hook%E5%BC%82%E6%AD%A5%E6%9B%B4%E6%96%B0%E9%97%AE%E9%A2%98/" title="hook异步更新问题"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
-    </li>
     
+    <li class="next">
+      <a href="/React/React-Router/Route%E7%BB%84%E4%BB%B6%E6%B8%B2%E6%9F%93%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F/" title="Route组件渲染的几种方式"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
     
     
   </ul>
