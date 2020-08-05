@@ -33,7 +33,7 @@ ReactDOM.render(
 );
 ```
 
-<div class="danger-block">
+<div class="block danger-block">
 
 不要尝试用内联方法的方式赋值给 `component` 属性，如以下示例所示：
 
@@ -71,13 +71,13 @@ ReactDOM.render(
 );
 ```
 
-<div class="tip-block">
+<div class="block tip-block">
 
 + 与将内联方法传递给 `component` 属性不同，使用此方式，不会造成组件的重复渲染
 + `props` 参数为 `{ match, location, history }`
 </div>
 
-<div class="warn-block">
+<div class="block warn-block">
 
 `component` 属性的优先级要高于 `render` 。避免将两个属性同时使用在一个路由组件上。
 </div>
@@ -122,7 +122,7 @@ ReactDOM.render(
 );
 ```
 
-<div class="warn-block">
+<div class="block warn-block">
 
 `children` 属性的优先级要高于 `render` 和 `component` 。避免将多个属性同时使用在一个路由组件上。
 </div>
