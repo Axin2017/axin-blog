@@ -6,14 +6,14 @@
 title: axin-blog
 subtitle: '学无止境，及时记录'
 description: ''
-keywords: axin,axin-blog,axinblog
+keywords: axin,axin-blog,axinblog,阿新的博客,阿新,阿新博客
 author: Axin
 language: zh-CN
 timezone: ''
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://120.76.175.174
+url: http://www.axin-blog.com
 root: /
 permalink: :category/:title/
 permalink_defaults:

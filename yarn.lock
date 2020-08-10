@@ -2568,6 +2568,11 @@ swig-templates@^2.0.3:
     optimist "~0.6"
     uglify-js "2.6.0"
 
+tanxin-node-utils@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.npm.taobao.org/tanxin-node-utils/download/tanxin-node-utils-1.0.4.tgz?cache=0&sync_timestamp=1597042935856&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Ftanxin-node-utils%2Fdownload%2Ftanxin-node-utils-1.0.4.tgz#0bf08fb755473522903665aed42140359bf7efda"
+  integrity sha1-C/CPt1VHNSKQNmWu1CFANZv379o=
+
 text-table@^0.2.0:
   version "0.2.0"
   resolved "https://registry.npm.taobao.org/text-table/download/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
