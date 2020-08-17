@@ -9209,6 +9209,8 @@ body.okayNav-loaded {
   }
 }
 
+/** block相关  */
+
 .block {
   margin-top: 20px;
   padding: 10px 15px;
@@ -9247,5 +9249,7 @@ body.okayNav-loaded {
   border-color: #42b983;
 }
 .tip-block::before {
+  display: block;
+  margin-bottom: 10px;
   content: '提示';
 }
