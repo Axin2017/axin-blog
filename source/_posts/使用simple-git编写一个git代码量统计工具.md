@@ -103,4 +103,4 @@ console.log(chalk.green('这句代码会在控制台输出绿色的字'))
 
 对此我已经提了issue在原作者的github上。
 
-[it will render repeat lines of title on Windows when the prorerty of message is Chinese and too long to display in a single line](https://github.com/SBoudrias/Inquirer.js/issues/953)
+[it will render repeat lines of title on Windows when the property of message is Chinese and too long to display in a single line](https://github.com/SBoudrias/Inquirer.js/issues/953)
