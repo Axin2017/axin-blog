@@ -95,3 +95,12 @@ console.log(chalk.green('这句代码会在控制台输出绿色的字'))
 [git-code-count](https://github.com/Axin2017/git-code-count)
 
 欢迎使用，提出issues以及在博客上留言提出你想要的功能，我将会持续维护。
+
+# 显示多行后续
+在文章的上部分，我贴了一张体验动图，可以发现，当我按箭头上下切换的时候，重复显示了很多行
+
+经过我后续的测试，发现，当标题为中文，且一行显示不完的时候，就会有这样的问题。
+
+对此我已经提了issue在原作者的github上。
+
+[it will render repeat lines of title on Windows when the prorerty of message is Chinese and too long to display in a single line](https://github.com/SBoudrias/Inquirer.js/issues/953)
