@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>FLIP动画简介 | axin-blog</title>
+  <meta name="description" content="今天的目标 FLIP简介FLIP 是将一些开销高昂的动画，如针对 width，height，left 或 top 的动画，映射为 transform 动画。通过记录元素的两个快照，一个是元素的初始位置（First - F），另一个是元素的最终位置（Last - L），然后对元素使用一个 transform 变换来反转（Invert - I），让元素看起来还在初始位置，最后移除元素上的 transf">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FLIP动画简介">
+<meta property="og:url" content="http://www.axin-blog.com/uncategorized/FLIP%E5%8A%A8%E7%94%BB%E7%AE%80%E4%BB%8B/index.html">
+<meta property="og:site_name" content="axin-blog">
+<meta property="og:description" content="今天的目标 FLIP简介FLIP 是将一些开销高昂的动画，如针对 width，height，left 或 top 的动画，映射为 transform 动画。通过记录元素的两个快照，一个是元素的初始位置（First - F），另一个是元素的最终位置（Last - L），然后对元素使用一个 transform 变换来反转（Invert - I），让元素看起来还在初始位置，最后移除元素上的 transf">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://www.axin-blog.com/assets/FLIP%E5%8A%A8%E7%94%BB%E7%AE%80%E4%BB%8B/flip-demo.gif">
+<meta property="og:image" content="http://www.axin-blog.com/assets/FLIP%E5%8A%A8%E7%94%BB%E7%AE%80%E4%BB%8B/event-loop.png">
+<meta property="article:published_time" content="2020-08-24T12:03:56.000Z">
+<meta property="article:modified_time" content="2020-08-26T13:07:09.867Z">
+<meta property="article:author" content="Axin">
+<meta property="article:tag" content="axin">
+<meta property="article:tag" content="axin-blog">
+<meta property="article:tag" content="axinblog">
+<meta property="article:tag" content="阿新的博客">
+<meta property="article:tag" content="阿新">
+<meta property="article:tag" content="阿新博客">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://www.axin-blog.com/assets/FLIP%E5%8A%A8%E7%94%BB%E7%AE%80%E4%BB%8B/flip-demo.gif">
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://www.axin-blog.com/uncategorized/FLIP%E5%8A%A8%E7%94%BB%E7%AE%80%E4%BB%8B/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="axin-blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/Axin2017" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">吃馒头的火鸡</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">学无止境</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Guangzhou, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/Axin2017" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎留言，欢迎分享，欢迎打赏~~</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/React/">React</a><span class="category-list-count">2</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/React/React-Hook/">React-Hook</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/React/React-Router/">React-Router</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/node-cli/">node-cli</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/node-cli/git/">git</a><span class="category-list-count">1</span></li></ul></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hook-async/" rel="tag">Hook, async</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Route-Render/" rel="tag">Route-Render</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/" rel="tag">git</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Hook-async/" style="font-size: 13px;">Hook, async</a> <a href="/tags/Route-Render/" style="font-size: 13px;">Route-Render</a> <a href="/tags/git/" style="font-size: 13px;">git</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/uncategorized/FLIP%E5%8A%A8%E7%94%BB%E7%AE%80%E4%BB%8B/" class="title">FLIP动画简介</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-08-24T12:03:56.000Z" itemprop="datePublished">2020-08-24</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/node-cli/">node-cli</a><i class="icon icon-angle-right"></i><a class="category-link" href="/categories/node-cli/git/">git</a>
+              </p>
+              <p class="item-title">
+                <a href="/node-cli/git/%E4%BD%BF%E7%94%A8simple-git%E7%BC%96%E5%86%99%E4%B8%80%E4%B8%AAgit%E4%BB%A3%E7%A0%81%E9%87%8F%E7%BB%9F%E8%AE%A1%E5%B7%A5%E5%85%B7/" class="title">使用simple-git编写一个git代码量统计工具</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-08-17T13:13:19.000Z" itemprop="datePublished">2020-08-17</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/React/">React</a><i class="icon icon-angle-right"></i><a class="category-link" href="/categories/React/React-Hook/">React-Hook</a>
+              </p>
+              <p class="item-title">
+                <a href="/React/React-Hook/hook%E5%BC%82%E6%AD%A5%E6%9B%B4%E6%96%B0%E9%97%AE%E9%A2%98/" class="title">hook异步更新问题</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-08-03T11:27:50.000Z" itemprop="datePublished">2020-08-03</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/React/">React</a><i class="icon icon-angle-right"></i><a class="category-link" href="/categories/React/React-Router/">React-Router</a>
+              </p>
+              <p class="item-title">
+                <a href="/React/React-Router/Route%E7%BB%84%E4%BB%B6%E6%B8%B2%E6%9F%93%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F/" class="title">Route组件渲染的几种方式</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-07-28T08:51:40.000Z" itemprop="datePublished">2020-07-28</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-FLIP动画简介" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      FLIP动画简介
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/uncategorized/FLIP%E5%8A%A8%E7%94%BB%E7%AE%80%E4%BB%8B/" class="article-date">
+	  <time datetime="2020-08-24T12:03:56.000Z" itemprop="datePublished">2020-08-24</time>
+	</a>
+</span>
+        
+        
+
+        
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
+	    <span id="busuanzi_container_page_pv">
+			<span id="busuanzi_value_page_pv">0</span>
+		</span>
+	</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/uncategorized/FLIP%E5%8A%A8%E7%94%BB%E7%AE%80%E4%BB%8B/#comments" class="article-comment-link">评论</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 1.2k(字)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 5(分)</span>
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h1 id="今天的目标"><a href="#今天的目标" class="headerlink" title="今天的目标"></a>今天的目标</h1><p><img src="/assets/FLIP%E5%8A%A8%E7%94%BB%E7%AE%80%E4%BB%8B/flip-demo.gif" alt="flip-demo"></p>
+<h1 id="FLIP简介"><a href="#FLIP简介" class="headerlink" title="FLIP简介"></a>FLIP简介</h1><p><code>FLIP</code> 是将一些开销高昂的动画，如针对 <code>width</code>，<code>height</code>，<code>left</code> 或 <code>top</code> 的动画，映射为 <code>transform</code> 动画。通过记录元素的两个快照，一个是元素的初始位置（First - <code>F</code>），另一个是元素的最终位置（Last - <code>L</code>），然后对元素使用一个 transform 变换来反转（Invert - <code>I</code>），让元素看起来还在初始位置，最后移除元素上的 transform 使元素由初始位置运动（Play - <code>P</code>）到最终位置。</p>
+<p>所以 FLIP 来源于 <code>F</code>irst，<code>L</code>ast，<code>I</code>nvert，<code>P</code>lay</p>
+<ul>
+<li><code>F</code>: <code>first</code>, 元素的初始状态</li>
+<li><code>L</code>: <code>last</code>, 元素的结束状态</li>
+<li><code>I</code>: <code>invert</code>, 倒置，把始末的状态导致过来</li>
+<li><code>P</code>: <code>play</code>, 播放动画</li>
+</ul>
+<h1 id="需理解的前提知识"><a href="#需理解的前提知识" class="headerlink" title="需理解的前提知识"></a>需理解的前提知识</h1><h2 id="1-浏览器的事件执行顺序"><a href="#1-浏览器的事件执行顺序" class="headerlink" title="1.浏览器的事件执行顺序"></a>1.浏览器的事件执行顺序</h2><p><img src="/assets/FLIP%E5%8A%A8%E7%94%BB%E7%AE%80%E4%BB%8B/event-loop.png" alt="event-loop"></p>
+<h3 id="三个小例子"><a href="#三个小例子" class="headerlink" title="三个小例子"></a>三个小例子</h3><p>一次宏任务执行完毕之后,浏览器才会渲染</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.body.style = <span class="string">'background:black'</span>;</span><br><span class="line"><span class="built_in">document</span>.body.style = <span class="string">'background:red'</span>;</span><br><span class="line"><span class="built_in">document</span>.body.style = <span class="string">'background:blue'</span>;</span><br><span class="line"><span class="built_in">document</span>.body.style = <span class="string">'background:grey'</span>;</span><br></pre></td></tr></table></figure>
+
+<p>宏任务–&gt;渲染–&gt;宏任务</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.body.style = <span class="string">'background:blue'</span>;</span><br><span class="line">setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">document</span>.body.style = <span class="string">'background:black'</span></span><br><span class="line">&#125;,<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+<p>宏任务–&gt;微任务–&gt;渲染</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.body.style = <span class="string">'background:blue'</span>;</span><br><span class="line"><span class="built_in">Promise</span>.resolve().then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">document</span>.body.style = <span class="string">'background:black'</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-getBoundingClientRect"><a href="#2-getBoundingClientRect" class="headerlink" title="2.getBoundingClientRect"></a>2.getBoundingClientRect</h2><p><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Element/getBoundingClientRect" target="_blank" rel="noopener">Element.getBoundingClientRect()</a>  方法返回元素的大小及其相对于视口的位置。</p>
+<div class="block tip-block">
+
+<p>使用这个api的真正目的在于它能够强制浏览器同步当前元素的位置</p>
+</div>
+
+<h2 id="3-为什么使用tranform-opacity-等属性做动画会比直接改变Left-top等属性做动画更好"><a href="#3-为什么使用tranform-opacity-等属性做动画会比直接改变Left-top等属性做动画更好" class="headerlink" title="3.为什么使用tranform, opacity 等属性做动画会比直接改变Left,top等属性做动画更好"></a>3.为什么使用<code>tranform</code>, <code>opacity</code> 等属性做动画会比直接改变<code>Left</code>,<code>top</code>等属性做动画更好</h2><p>为了生成流畅的动画，你需要让浏览器尽可能少地工作，最好的办法就是充分利用 GPU，并避免动画过程中触发页面重排或重绘。目前 Chrome，Firefox，Safari，Opera 和 IE11 都对 <code>transform</code>（<code>translate</code>，<code>rotate</code> 和 <code>scale</code>） 和 <code>opacity</code> 进行硬件加速。所以我们应该尽量使用 <code>transform</code> 和 <code>opacity</code> 属性来实现我们的动画.</p>
+<h1 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获取初始位置</span></span><br><span class="line"><span class="keyword">var</span> first = el.getBoundingClientRect();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 让元素在最终位置上.可以通过直接设置class,改变兄弟元素等等方式都行</span></span><br><span class="line">el.classList.add(<span class="string">'class-end'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取最终位置</span></span><br><span class="line"><span class="keyword">var</span> last = el.getBoundingClientRect();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 计算反转</span></span><br><span class="line"><span class="keyword">var</span> invert = first.top - last.top;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 反转</span></span><br><span class="line">el.style.transform = <span class="string">'translateY('</span> + invert + <span class="string">'px)'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 等到下一帧，也就是其他所有的样式都已经被应用</span></span><br><span class="line">requestAnimationFrame(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; </span><br><span class="line">  <span class="comment">// 添加动画相关的设置</span></span><br><span class="line">  el.classList.add(<span class="string">'animate-on-transforms'</span>);</span><br><span class="line">  <span class="comment">// 开始动画</span></span><br><span class="line">  el.style.transform = <span class="string">''</span>; </span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 结束时清理</span></span><br><span class="line">el.addEventListener(<span class="string">'transitionend'</span>, () =&gt; &#123;</span><br><span class="line">  el.classList.remove(<span class="string">'animate-on-transforms'</span>);</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1.0"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>flip-animation-demo<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="css">    <span class="selector-class">.container</span> &#123;</span></span><br><span class="line">      display: flex;</span><br><span class="line">      flex-wrap: wrap;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    img &#123;</span><br><span class="line">      display: inline-block;</span><br><span class="line">      width: 110px;</span><br><span class="line">      height: 110px;</span><br><span class="line">      margin: 5px;</span><br><span class="line">    &#125;</span><br><span class="line">  <span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"container"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="actionscript">    <span class="function"><span class="keyword">function</span> <span class="title">insert</span><span class="params">()</span> </span>&#123;</span></span><br><span class="line"><span class="actionscript">      <span class="keyword">const</span> allImgs = container.querySelectorAll(<span class="string">'img'</span>);</span></span><br><span class="line"></span><br><span class="line"><span class="javascript">      allImgs.forEach(<span class="function"><span class="params">img</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="actionscript">        <span class="comment">// 先记录下原始位置 FIRST</span></span></span><br><span class="line"><span class="actionscript">        <span class="keyword">const</span> &#123; left, top &#125; = img.getBoundingClientRect();</span></span><br><span class="line">        img._top = top;</span><br><span class="line">        img._left = left;</span><br><span class="line">      &#125;)</span><br><span class="line"></span><br><span class="line"><span class="javascript">      <span class="keyword">const</span> img = <span class="built_in">document</span>.createElement(<span class="string">'img'</span>);</span></span><br><span class="line"><span class="javascript">      <span class="keyword">const</span> random = <span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random() * <span class="number">9</span>) + <span class="number">1</span>;</span></span><br><span class="line"><span class="javascript">      img.src = <span class="string">`./images/<span class="subst">$&#123;random&#125;</span>.jpeg`</span>;</span></span><br><span class="line">      container.insertBefore(img, container.firstChild);</span><br><span class="line"></span><br><span class="line"><span class="javascript">      allImgs.forEach(<span class="function"><span class="params">img</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="actionscript">        <span class="comment">// 得到现在的位置 Last</span></span></span><br><span class="line"><span class="actionscript">        <span class="keyword">const</span> &#123; left, top &#125; = img.getBoundingClientRect();</span></span><br><span class="line"><span class="actionscript">        <span class="comment">// 倒置 Invert</span></span></span><br><span class="line"><span class="actionscript">        <span class="keyword">const</span> top_distance = img._top - top;</span></span><br><span class="line"><span class="actionscript">        <span class="keyword">const</span> left_distance = img._left - left;</span></span><br><span class="line"><span class="javascript">        img.style.transform = <span class="string">`translate(<span class="subst">$&#123;left_distance&#125;</span>px, <span class="subst">$&#123;top_distance&#125;</span>px)`</span>;</span></span><br><span class="line"><span class="actionscript">        <span class="comment">// Play</span></span></span><br><span class="line"><span class="javascript">        setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="actionscript">          img.style.transition = <span class="string">'all 1s'</span>;</span></span><br><span class="line"><span class="actionscript">          img.style.transform = <span class="string">'none'</span>;</span></span><br><span class="line">        &#125;, 10)</span><br><span class="line"><span class="actionscript">        img.addEventListener(<span class="string">'transitionend'</span>, () =&gt; &#123;</span></span><br><span class="line"><span class="actionscript">          img.style = <span class="string">'none'</span>;</span></span><br><span class="line">        &#125;);</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="actionscript">    <span class="comment">// setInterval(insert, 2000)</span></span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<div class="block tip-block">
+
+<p>图片资源请自行寻找.本例子是选了9张图片分别命名为<code>1-9.jpeg</code>,放在与html同级目录下的<code>images</code>文件夹中</p>
+</div>
+
+<h1 id="FAQ"><a href="#FAQ" class="headerlink" title="FAQ"></a>FAQ</h1><h2 id="FLIP-适合用在什么地方"><a href="#FLIP-适合用在什么地方" class="headerlink" title="FLIP 适合用在什么地方"></a>FLIP 适合用在什么地方</h2><ul>
+<li>两个状态的过度</li>
+<li>元素增加,移除</li>
+<li>展开,收缩</li>
+<li>打乱顺序/重新排列</li>
+</ul>
+<h2 id="为什么要用倒置-而不是通过加transform直接从开始到结束"><a href="#为什么要用倒置-而不是通过加transform直接从开始到结束" class="headerlink" title="为什么要用倒置,而不是通过加transform直接从开始到结束"></a>为什么要用倒置,而不是通过加transform直接从开始到结束</h2><ul>
+<li>很难知道结束的位置,且步骤繁琐,难以理解</li>
+<li>从开始到结束的时候,浏览器需要计算结束的位置.导致过来的时候,浏览器其实已经知道了结束的位置.更快.</li>
+<li>一直用从开始到结束的话,需要一直去维护transform的值</li>
+</ul>
+<h2 id="对性能的影响"><a href="#对性能的影响" class="headerlink" title="对性能的影响"></a>对性能的影响</h2><p>从交互结束到感知到响应大概需要 100ms 的生理反应时间,如果网站能在这 100ms 内做出响应，那么对用户来说就相当于网站立即进行了响应，然后只需要保证动画在 60FPS 运行就能给用户带来最佳的体验.我们可以充分利用用户 100ms 生理反应时间来进行相关的计算：getBoundingClientRect 或 getComputedStyle，并通过 FLIP 技术使动画尽快开始，最后通过 transform 和 opacity 的动画来保证动画的平滑运行.</p>
+<p>FLIP 技术带来的改变对于 PC 端可能并不是那么明显，但对于 CPU 并不算非常强大的移动端却是相当显著.</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="http://www.axin-blog.com/uncategorized/FLIP%E5%8A%A8%E7%94%BB%E7%AE%80%E4%BB%8B/" title="FLIP动画简介" target="_blank" rel="external">http://www.axin-blog.com/uncategorized/FLIP%E5%8A%A8%E7%94%BB%E7%AE%80%E4%BB%8B/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/Axin2017" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/Axin2017" target="_blank"><span class="text-dark">吃馒头的火鸡</span><small class="ml-1x">学无止境</small></a></h3>
+        <div>前端菜鸟，希望可以永远热爱学习。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    
+    <li class="next">
+      <a href="/node-cli/git/%E4%BD%BF%E7%94%A8simple-git%E7%BC%96%E5%86%99%E4%B8%80%E4%B8%AAgit%E4%BB%A3%E7%A0%81%E9%87%8F%E7%BB%9F%E8%AE%A1%E5%B7%A5%E5%85%B7/" title="使用simple-git编写一个git代码量统计工具"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat" data-mobile-sites="weibo,qq,wechat"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipay.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechat.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/Axin2017" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: true,
+    notify: false,
+    appId: 'CncpVe6G8lFb2KGBkUTa2KA6-gzGzoHsz',
+    appKey: 'EgFiSgkbJqKsVs5p1CR0D4WH',
+    placeholder: '留下你宝贵的足迹吧',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>
