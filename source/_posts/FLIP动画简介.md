@@ -83,13 +83,13 @@ var invert = first.top - last.top;
 // 反转
 el.style.transform = 'translateY(' + invert + 'px)';
 
-// 等到下一帧，也就是其他所有的样式都已经被应用
-requestAnimationFrame(function() { 
+// 播放
+setTimeout(function() { 
   // 添加动画相关的设置
   el.classList.add('animate-on-transforms');
   // 开始动画
   el.style.transform = ''; 
-});
+}, 0);
 
 // 结束时清理
 el.addEventListener('transitionend', () => {
@@ -156,11 +156,15 @@ el.addEventListener('transitionend', () => {
         setTimeout(() => {
           img.style.transition = 'all 1s';
           img.style.transform = 'none';
-        }, 10)
-        img.addEventListener('transitionend', () => {
-          img.style = 'none';
-        });
+        }, 0);
       });
+
+      // 动画结束之后清空transition和transform
+      img.addEventListener('transitionend', () => {
+        img.style.transition = '';
+        img.style.transform = '';
+      });
+      
     }
 
     // setInterval(insert, 2000)
@@ -188,9 +192,9 @@ el.addEventListener('transitionend', () => {
 
 ## 为什么要用倒置,而不是通过加transform直接从开始到结束
 
-+ 很难知道结束的位置,且步骤繁琐,难以理解
++ 很难知道结束的位置,步骤繁琐,难以理解
 + 从开始到结束的时候,浏览器需要计算结束的位置.导致过来的时候,浏览器其实已经知道了结束的位置.更快.
-+ 一直用从开始到结束的话,需要一直去维护transform的值
++ 一直用从开始到结束的话,需要一直去维护transform的值,且容易弄脏css
 
 ## 对性能的影响
 
