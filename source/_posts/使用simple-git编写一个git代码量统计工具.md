@@ -3,6 +3,7 @@ title: 使用simple-git编写一个git代码量统计工具
 date: 2020-08-17 21:13:19
 tags: git
 categories: [node-cli, git]
+toc: true
 ---
 
 # 背景
