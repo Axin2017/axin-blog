@@ -27,7 +27,7 @@
 <meta property="og:image" content="http://www.axin-blog.com/assets/FLIP%E5%8A%A8%E7%94%BB%E7%AE%80%E4%BB%8B/flip-demo.gif">
 <meta property="og:image" content="http://www.axin-blog.com/assets/FLIP%E5%8A%A8%E7%94%BB%E7%AE%80%E4%BB%8B/event-loop.png">
 <meta property="article:published_time" content="2020-08-24T12:03:56.000Z">
-<meta property="article:modified_time" content="2020-08-27T02:26:33.089Z">
+<meta property="article:modified_time" content="2020-08-27T02:41:48.444Z">
 <meta property="article:author" content="Axin">
 <meta property="article:tag" content="axin">
 <meta property="article:tag" content="axin-blog">
@@ -378,7 +378,7 @@
 <h2 id="2-getBoundingClientRect"><a href="#2-getBoundingClientRect" class="headerlink" title="2.getBoundingClientRect"></a>2.getBoundingClientRect</h2><p><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Element/getBoundingClientRect" target="_blank" rel="noopener">Element.getBoundingClientRect()</a>  方法返回元素的大小及其相对于视口的位置。</p>
 <div class="block tip-block">
 
-<p>使用这个api的真正目的在于它能够强制浏览器同步当前元素的位置</p>
+<p>这个api的可以在浏览器渲染前就计算元素所处的最新位置信息</p>
 </div>
 
 <h2 id="3-为什么使用tranform-opacity-等属性做动画会比直接改变Left-top等属性做动画更好"><a href="#3-为什么使用tranform-opacity-等属性做动画会比直接改变Left-top等属性做动画更好" class="headerlink" title="3.为什么使用tranform, opacity 等属性做动画会比直接改变Left,top等属性做动画更好"></a>3.为什么使用<code>tranform</code>, <code>opacity</code> 等属性做动画会比直接改变<code>Left</code>,<code>top</code>等属性做动画更好</h2><p>为了生成流畅的动画，你需要让浏览器尽可能少地工作，最好的办法就是充分利用 GPU，并避免动画过程中触发页面重排或重绘。目前 Chrome，Firefox，Safari，Opera 和 IE11 都对 <code>transform</code>（<code>translate</code>，<code>rotate</code> 和 <code>scale</code>） 和 <code>opacity</code> 进行硬件加速。所以我们应该尽量使用 <code>transform</code> 和 <code>opacity</code> 属性来实现我们的动画.</p>
