@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://www.axin-blog.com/uncategorized/FLIP%E5%8A%A8%E7%94%BB%E7%AE%80%E4%BB%8B/</loc>
+    <loc>http://www.axin-blog.com/animation/FLIP%E5%8A%A8%E7%94%BB%E7%AE%80%E4%BB%8B/</loc>
     
     <lastmod>2020-08-27</lastmod>
     
@@ -101,6 +101,13 @@
     <priority>0.6</priority>
   </url>
   
+  <url>
+    <loc>http://www.axin-blog.com/tags/FLIP/</loc>
+    <lastmod>2020-08-27</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
 
   
   <url>
@@ -133,6 +140,13 @@
   
   <url>
     <loc>http://www.axin-blog.com/categories/node-cli/git/</loc>
+    <lastmod>2020-08-27</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.axin-blog.com/categories/animation/</loc>
     <lastmod>2020-08-27</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>

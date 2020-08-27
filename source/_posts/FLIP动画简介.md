@@ -1,8 +1,9 @@
 ---
 title: FLIP动画简介
 date: 2020-08-24 20:03:56
-tags:
-categories:
+tags: FLIP
+categories: animation
+toc: true
 ---
 
 # 今天的目标
@@ -22,7 +23,7 @@ categories:
 
 # 需理解的前提知识
 
-## 1.浏览器的事件执行顺序
+## 浏览器的事件执行顺序
 
 ![event-loop](/assets/FLIP动画简介/event-loop.png)
 
@@ -52,7 +53,7 @@ Promise.resolve().then(() => {
 })
 ```
 
-## 2.getBoundingClientRect
+## getBoundingClientRect
 
 [Element.getBoundingClientRect()](https://developer.mozilla.org/zh-CN/docs/Web/API/Element/getBoundingClientRect)  方法返回元素的大小及其相对于视口的位置。
 
@@ -61,7 +62,7 @@ Promise.resolve().then(() => {
 这个api的可以在浏览器渲染前就计算元素所处的最新位置信息
 </div>
 
-## 3.为什么使用`tranform`, `opacity` 等属性做动画会比直接改变`Left`,`top`等属性做动画更好
+## 为什么使用`tranform`, `opacity` 等属性做动画会比直接改变`Left`,`top`等属性做动画更好
 
 为了生成流畅的动画，你需要让浏览器尽可能少地工作，最好的办法就是充分利用 GPU，并避免动画过程中触发页面重排或重绘。目前 Chrome，Firefox，Safari，Opera 和 IE11 都对 `transform`（`translate`，`rotate` 和 `scale`） 和 `opacity` 进行硬件加速。所以我们应该尽量使用 `transform` 和 `opacity` 属性来实现我们的动画.
 
