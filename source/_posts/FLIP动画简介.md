@@ -58,7 +58,7 @@ Promise.resolve().then(() => {
 
 <div class="block tip-block">
 
-使用这个api的真正目的在于它能够强制浏览器同步当前元素的位置
+这个api的可以在浏览器渲染前就计算元素所处的最新位置信息
 </div>
 
 ## 3.为什么使用`tranform`, `opacity` 等属性做动画会比直接改变`Left`,`top`等属性做动画更好
