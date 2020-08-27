@@ -124,13 +124,10 @@ el.addEventListener('transitionend', () => {
 </head>
 
 <body>
-  <div id="container">
-
-  </div>
+  <div id="container"></div>
 
   <script>
-
-    function insert() {
+    function insert(count) {
       const allImgs = container.querySelectorAll('img');
 
       allImgs.forEach(img => {
@@ -140,10 +137,20 @@ el.addEventListener('transitionend', () => {
         img._left = left;
       })
 
-      const img = document.createElement('img');
-      const random = Math.floor(Math.random() * 9) + 1;
-      img.src = `./images/${random}.jpeg`;
-      container.insertBefore(img, container.firstChild);
+      count = count || 1;
+      for (let i = 0; i < count; i++) {
+        const img = document.createElement('img');
+        const random = Math.floor(Math.random() * 9) + 1;
+        img.src = `./images/${random}.jpeg`;
+        container.insertBefore(img, container.firstChild);
+        
+        // 绑定事件，动画结束之后清空transition和transform
+        img.addEventListener('transitionend', () => {
+          img.style.transition = '';
+          img.style.transform = '';
+        });
+      }
+
 
       allImgs.forEach(img => {
         // 得到现在的位置 Last
@@ -154,17 +161,10 @@ el.addEventListener('transitionend', () => {
         img.style.transform = `translate(${left_distance}px, ${top_distance}px)`;
         // Play
         setTimeout(() => {
-          img.style.transition = 'all 1s';
+          img.style.transition = 'all .5s';
           img.style.transform = 'none';
         }, 0);
       });
-
-      // 动画结束之后清空transition和transform
-      img.addEventListener('transitionend', () => {
-        img.style.transition = '';
-        img.style.transform = '';
-      });
-      
     }
 
     // setInterval(insert, 2000)
