@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.axin-blog.com/"/>
-  <updated>2020-08-27T06:30:55.604Z</updated>
+  <updated>2020-09-02T03:46:44.783Z</updated>
   <id>http://www.axin-blog.com/</id>
   
   <author>
@@ -15,6 +15,37 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>1000万就是这么简单</title>
+    <link href="http://www.axin-blog.com/%E5%BD%A9%E7%A5%A8/1000%E4%B8%87%E5%B0%B1%E6%98%AF%E8%BF%99%E4%B9%88%E7%AE%80%E5%8D%95/"/>
+    <id>http://www.axin-blog.com/%E5%BD%A9%E7%A5%A8/1000%E4%B8%87%E5%B0%B1%E6%98%AF%E8%BF%99%E4%B9%88%E7%AE%80%E5%8D%95/</id>
+    <published>2020-09-02T01:45:22.000Z</published>
+    <updated>2020-09-02T03:46:44.783Z</updated>
+    
+    <content type="html"><![CDATA[<script>  var MAX_NUMBER_MAP = {    MAX_1_TO_5: 35,    MAX_6_TO_7: 12,  };  var LOCALSTORAGE_ITEM_KEY = {    DATE: '_last_date',    NUMBERS: '_last_numbers'  }  var now = new Date();  var nowStr = now.getFullYear() + '-' + now.getMonth() + '-' + now.getDate();  function getTodayNumbers() {    var lastDate = localStorage.getItem(LOCALSTORAGE_ITEM_KEY.DATE);    if (lastDate && lastDate === nowStr) {      return localStorage.getItem(LOCALSTORAGE_ITEM_KEY.NUMBERS);    }    return '';  }  function setTodayNumbersStr(numbersStr) {    localStorage.setItem(LOCALSTORAGE_ITEM_KEY.DATE, nowStr);    localStorage.setItem(LOCALSTORAGE_ITEM_KEY.NUMBERS, numbersStr);  }  function displayNumbers(numbers) {    document.getElementById('lucky-number').innerText = numbers;  }  function get1000W() {    var todayNumbers = getTodayNumbers();    if (todayNumbers) {      displayNumbers(todayNumbers);      return;    }    var numbers = [];    var numberCount = 7;    var firstRangeCount = 5;    while (numbers.length < numberCount) {      if (numbers.length < firstRangeCount) {        var random = Math.floor(Math.random() * MAX_NUMBER_MAP.MAX_1_TO_5) + 1;        if (numbers.indexOf(random) === -1) {          numbers.push(random);        }      } else {        var random = Math.floor(Math.random() * MAX_NUMBER_MAP.MAX_6_TO_7) + 1;        if (numbers.slice(firstRangeCount).indexOf(random) === -1) {          numbers.push(random);        }      }    }    var ascending = function (pre, next) {      return pre - next;    };    var numbersStrAfterSort = numbers      .slice(0, firstRangeCount)      .sort(ascending)      .concat(numbers        .slice(firstRangeCount)        .sort(ascending))      .join(', ');    displayNumbers(numbersStrAfterSort);    setTodayNumbersStr(numbersStrAfterSort);  }</script><h1 id="买大乐透？恭喜你，你来对地方了"><a href="#买大乐透？恭喜你，你来对地方了" class="headerlink" title="买大乐透？恭喜你，你来对地方了"></a>买大乐透？恭喜你，你来对地方了</h1><h2 id="今天你的幸运号码是"><a href="#今天你的幸运号码是" class="headerlink" title="今天你的幸运号码是"></a>今天你的幸运号码是</h2><span id="lucky-number" style="padding: 10px 20px;background: #eee; border-radius: 4px;color: red;"></span><div class="block tip-block"><p>大乐透虽好，不要沉迷喔~ 本站每天只提供一注幸运号码，中了请记得给我打赏&lt;(￣︶￣)&gt;，不中请明天继续加油ヾ(≧▽≦*)o</p></div><script>  get1000W();</script>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;script&gt;
+  var MAX_NUMBER_MAP = {
+    MAX_1_TO_5: 35,
+    MAX_6_TO_7: 12,
+  };
+  var LOCALSTORAGE_ITEM_KEY = {
+    DATE: &#39;_last_date&#39;,
+    N
+      
+    
+    </summary>
+    
+    
+      <category term="彩票" scheme="http://www.axin-blog.com/categories/%E5%BD%A9%E7%A5%A8/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>FLIP动画简介</title>
